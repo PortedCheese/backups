@@ -16,6 +16,11 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 RestoreDataBaseCommand::class,
             ]);
         }
+        // Добавить конфигурацию.
+        app()->config['filesystems.disks.backups'] = [
+            'driver' => 'local',
+            'root' => storage_path("app/backups"),
+        ];
 	}
 
 	public function register()

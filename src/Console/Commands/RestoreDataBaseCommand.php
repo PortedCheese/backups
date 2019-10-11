@@ -14,7 +14,7 @@ class RestoreDataBaseCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'restore:db {table?} {--file=backups/backup}';
+    protected $signature = 'restore:db {table?} {--file=backup.sql}';
 
     /**
      * The console command description.
@@ -47,8 +47,8 @@ class RestoreDataBaseCommand extends Command
     public function handle()
     {
         // File.
-        $file = $this->option("file") . ".sql";
-        if (! Storage::exists($file)) {
+        $file = $this->option("file");
+        if (! Storage::disk("backups")->exists($file)) {
             $this->error("File not found");
             return;
         }
@@ -65,7 +65,7 @@ class RestoreDataBaseCommand extends Command
             $this->username,
             $password,
             $db,
-            public_path("storage/" . $file)
+            storage_path("app/backups/" . $this->option("file"))
         ));
 
         try {

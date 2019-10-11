@@ -14,7 +14,7 @@ class BackupDataBaseCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'backup:db {table?} {--file=backups/backup.sql}';
+    protected $signature = 'backup:db {table?} {--file=backup.sql}';
 
     /**
      * The console command description.
@@ -53,12 +53,17 @@ class BackupDataBaseCommand extends Command
             $password = "";
             $db .= " $table";
         }
+        // File.
+        $file = $this->option("file");
+        if (Storage::disk("backups")->exists($file)) {
+            Storage::disk("backups")->delete($file);
+        }
         // Make command.
         $process = Process::fromShellCommandline(sprintf(
             "mysqldump -u%s -p%s --default-character-set=utf8 --result-file=%s %s",
             $this->username,
             $password,
-            public_path("storage/" . $this->option("file")),
+            storage_path("app/backups/" . $this->option("file")),
             $db
         ));
 
