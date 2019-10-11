@@ -2,13 +2,20 @@
 
 namespace PortedCheese\Backups;
 
-use Illuminate\Support\Facades\Log;
+use PortedCheese\Backups\Console\Commands\BackupDataBaseCommand;
+use PortedCheese\Backups\Console\Commands\RestoreDataBaseCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
 	public function boot()
 	{
-
+        // Console.
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                BackupDataBaseCommand::class,
+                RestoreDataBaseCommand::class,
+            ]);
+        }
 	}
 
 	public function register()
