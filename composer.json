@@ -1,0 +1,28 @@
+{
+    "name": "portedcheese/backups",
+    "description": "Backup db and storage with sendind to aws",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vladimir Peshkov",
+            "email": "vladimirpeshkov5@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "portedcheese/base-settings": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "PortedCheese\\Backups\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PortedCheese\\Backups\\ServiceProvider"
+            ]
+        }
+    }
+}
