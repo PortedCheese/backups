@@ -15,12 +15,12 @@
         "zanysoft/laravel-zip": "^1.0"
     },
     "autoload": {
-        "psr-4": {
-            "PortedCheese\\Backups\\": "src/"
-        },
         "files": [
             "src/helpers.php"
-        ]
+        ],
+        "psr-4": {
+            "PortedCheese\\Backups\\": "src/"
+        }
     },
     "extra": {
         "laravel": {
