@@ -11,7 +11,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "portedcheese/base-settings": "^v1.3"
+        "portedcheese/base-settings": "^v1.3",
+        "zanysoft/laravel-zip": "^1.0"
     },
     "autoload": {
         "psr-4": {
