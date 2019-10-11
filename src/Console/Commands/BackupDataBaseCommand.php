@@ -63,7 +63,7 @@ class BackupDataBaseCommand extends Command
             "mysqldump -u%s -p%s --default-character-set=utf8 --result-file=%s %s",
             $this->username,
             $password,
-            storage_path("app/backups/" . $this->option("file")),
+            backup_path($this->option("file")),
             $db
         ));
 

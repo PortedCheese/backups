@@ -65,7 +65,7 @@ class RestoreDataBaseCommand extends Command
             $this->username,
             $password,
             $db,
-            storage_path("app/backups/" . $this->option("file"))
+            backup_path($this->option("file"))
         ));
 
         try {

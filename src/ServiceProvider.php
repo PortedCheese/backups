@@ -19,7 +19,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // Добавить конфигурацию.
         app()->config['filesystems.disks.backups'] = [
             'driver' => 'local',
-            'root' => storage_path("app/backups"),
+            'root' => backup_path(),
         ];
 	}
 
