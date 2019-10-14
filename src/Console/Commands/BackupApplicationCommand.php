@@ -13,14 +13,14 @@ class BackupApplicationCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'backup:app {type=daily}';
+    protected $signature = 'backup:app {period=daily}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Backup app files by type';
+    protected $description = 'Backup app files by period';
 
     /**
      * @var Zip
@@ -57,14 +57,15 @@ class BackupApplicationCommand extends Command
             return;
         }
         // Make archive.
-        $type = $this->argument("type");
+        $period = $this->argument("period");
+        $fileName = "{$period}.zip";
 
-        if (Storage::disk("backups")->exists("{$type}.zip")) {
-            Storage::disk("backups")->delete("{$type}.zip");
+        if (Storage::disk("backups")->exists($fileName)) {
+            Storage::disk("backups")->delete($fileName);
         }
 
         try {
-            $this->zip = Zip::create(backup_path("{$type}.zip"));
+            $this->zip = Zip::create(backup_path($fileName));
         }
         catch (\Exception $exception) {
             $this->zip = null;
@@ -87,7 +88,7 @@ class BackupApplicationCommand extends Command
                 BackupStorageCommand::FILE_NAME,
             ]);
 
-            $this->info("Backup {$type} create successfully");
+            $this->info("Backup {$period} create successfully");
         }
         catch (\Exception $exception) {
             $this->error("Error while generated archive");

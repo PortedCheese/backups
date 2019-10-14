@@ -7,22 +7,25 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ZanySoft\Zip\Zip;
 
-class RestoreStorageCommand extends Command
+class RestoreApplicationCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'restore:storage';
+    protected $signature = 'restore:app {period=daily}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Restore public folder in storage';
+    protected $description = 'Restore app files by period';
 
+    /**
+     * @var Zip
+     */
     protected $zip;
 
     /**
@@ -42,14 +45,16 @@ class RestoreStorageCommand extends Command
      */
     public function handle()
     {
-        if (! Storage::disk("backups")->exists(BackupStorageCommand::FILE_NAME)) {
-            $this->error("File not found");
-            Log::error("Storage archive file not found");
+        $period = $this->argument("period");
+        $fileName = "{$period}.zip";
+
+        if (! Storage::disk("backups")->exists($fileName)) {
+            $this->error("Fail not found");
             return;
         }
 
         try {
-            $this->zip = Zip::open(backup_path(BackupStorageCommand::FILE_NAME));
+            $this->zip = Zip::open(backup_path($fileName));
         }
         catch (\Exception $exception) {
             $this->zip = null;
@@ -57,24 +62,23 @@ class RestoreStorageCommand extends Command
 
         if (! $this->zip) {
             $this->error("Fail open archive");
-            Log::error("Fail open storage archive");
+            Log::error("Fail open application archive");
             return;
         }
 
-        $directories = Storage::disk("public")->directories();
-        foreach ($directories as $directory) {
-            Storage::disk("public")->deleteDirectory($directory);
-        }
-
         try {
-            $this->zip->extract(backup_storage_path());
+            $this->zip->extract(backup_path());
             $this->zip->close();
+            Storage::disk("backups")->delete($fileName);
 
-            $this->info("Files successfully restored");
+            $this->callSilent("restore:db");
+            $this->callSilent("restore:storage");
+
+            $this->info("Application successfully restored");
         }
         catch (\Exception $exception) {
             $this->error("Fail extract archive. Need manually extract");
-            Log::error("Fail extract storage archive. Need manually extract");
+            Log::error("Fail extract application archive. Need manually extract");
         }
     }
 }
