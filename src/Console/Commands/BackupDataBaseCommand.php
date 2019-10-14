@@ -9,12 +9,13 @@ use Symfony\Component\Process\Process;
 
 class BackupDataBaseCommand extends Command
 {
+    const FILE_NAME = "backup.sql";
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'backup:db {table?} {--file=backup.sql}';
+    protected $signature = "backup:db {table?} {--file=" . self::FILE_NAME . "}";
 
     /**
      * The console command description.
@@ -63,7 +64,7 @@ class BackupDataBaseCommand extends Command
             "mysqldump -u%s -p%s --default-character-set=utf8 --result-file=%s %s",
             $this->username,
             $password,
-            backup_path($this->option("file")),
+            backup_path($file),
             $db
         ));
 
