@@ -8,6 +8,8 @@ use ZanySoft\Zip\Zip;
 
 class BackupApplicationCommand extends Command
 {
+    const FOLDER = "current";
+
     /**
      * The name and signature of the console command.
      *
@@ -88,10 +90,18 @@ class BackupApplicationCommand extends Command
                 BackupStorageCommand::FILE_NAME,
             ]);
 
+            $folder = self::FOLDER;
+
+            if (Storage::disk("backups")->exists("{$folder}/{$fileName}")) {
+                Storage::disk("backups")->delete("{$folder}/{$fileName}");
+            }
+            Storage::disk("backups")->move($fileName, "{$folder}/{$fileName}");
+
             $this->info("Backup {$period} create successfully");
         }
         catch (\Exception $exception) {
             $this->error("Error while generated archive");
+            $this->line($exception->getMessage());
         }
     }
 }

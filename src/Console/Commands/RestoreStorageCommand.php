@@ -70,6 +70,7 @@ class RestoreStorageCommand extends Command
             $this->zip->extract(backup_storage_path());
             $this->zip->close();
 
+            Storage::disk("backups")->delete(BackupStorageCommand::FILE_NAME);
             $this->info("Files successfully restored");
         }
         catch (\Exception $exception) {

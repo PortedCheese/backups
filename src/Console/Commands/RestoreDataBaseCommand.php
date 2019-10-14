@@ -74,6 +74,7 @@ class RestoreDataBaseCommand extends Command
             // Run command.
             $process->mustRun();
 
+            Storage::disk("backups")->delete($file);
             $this->info("The restore has been processed successfully");
         }
         catch (ProcessFailedException $exception) {

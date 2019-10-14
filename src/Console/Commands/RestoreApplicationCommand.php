@@ -14,7 +14,7 @@ class RestoreApplicationCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'restore:app {period=daily}';
+    protected $signature = 'restore:app {period=daily} {--from-current}';
 
     /**
      * The console command description.
@@ -48,8 +48,15 @@ class RestoreApplicationCommand extends Command
         $period = $this->argument("period");
         $fileName = "{$period}.zip";
 
+        if ($this->option("from-current")) {
+            $folder = BackupApplicationCommand::FOLDER;
+            if (Storage::disk("backups")->exists("{$folder}/{$fileName}")) {
+                Storage::disk("backups")->copy("{$folder}/{$fileName}", $fileName);
+            }
+        }
+
         if (! Storage::disk("backups")->exists($fileName)) {
-            $this->error("Fail not found");
+            $this->error("File not found");
             return;
         }
 
@@ -73,6 +80,8 @@ class RestoreApplicationCommand extends Command
 
             $this->callSilent("restore:db");
             $this->callSilent("restore:storage");
+
+            $this->callSilent("cache:clear");
 
             $this->info("Application successfully restored");
         }
