@@ -5,6 +5,7 @@ namespace PortedCheese\Backups;
 use PortedCheese\Backups\Console\Commands\BackupDataBaseCommand;
 use PortedCheese\Backups\Console\Commands\BackupStorageCommand;
 use PortedCheese\Backups\Console\Commands\RestoreDataBaseCommand;
+use PortedCheese\Backups\Console\Commands\RestoreStorageCommand;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -16,6 +17,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 BackupDataBaseCommand::class,
                 RestoreDataBaseCommand::class,
                 BackupStorageCommand::class,
+                RestoreStorageCommand::class
             ]);
         }
         // Добавить конфигурацию.

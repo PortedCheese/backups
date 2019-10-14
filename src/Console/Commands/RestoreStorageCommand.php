@@ -6,26 +6,22 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use ZanySoft\Zip\Zip;
 
-class BackupStorageCommand extends Command
+class RestoreStorageCommand extends Command
 {
-    const FILE_NAME = "public.zip";
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'backup:storage';
+    protected $signature = 'restore:storage';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Backup public folder in storage';
+    protected $description = 'Restore public folder in storage';
 
-    /**
-     * @var Zip
-     */
     protected $zip;
 
     /**
@@ -45,29 +41,35 @@ class BackupStorageCommand extends Command
      */
     public function handle()
     {
-        if (Storage::disk("backups")->exists(self::FILE_NAME)) {
-            Storage::disk("backups")->delete(self::FILE_NAME);
+        if (! Storage::disk("backups")->exists(BackupStorageCommand::FILE_NAME)) {
+            $this->error("File not found");
+            return;
         }
 
         try {
-            $this->zip = Zip::create(backup_path(self::FILE_NAME));
+            $this->zip = Zip::open(backup_path(BackupStorageCommand::FILE_NAME));
         }
         catch (\Exception $exception) {
             $this->zip = null;
         }
 
         if (! $this->zip) {
-            $this->error("Fail init archive");
+            $this->error("Fail open archive");
             return;
         }
-        try {
-            $this->zip->add(backup_storage_path(), true);
-            $this->zip->close();
 
-            $this->info("Archive generated successfully");
+        $directories = Storage::disk("public")->directories();
+        foreach ($directories as $directory) {
+            Storage::disk("public")->deleteDirectory($directory);
+        }
+
+        try {
+            $this->zip->extract(backup_storage_path());
+
+            $this->info("Files successfully restored");
         }
         catch (\Exception $exception) {
-            $this->error("Error while generated archive");
+            $this->error("Fail extract archive. Need manually extract");
         }
     }
 }
