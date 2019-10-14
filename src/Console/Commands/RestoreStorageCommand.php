@@ -3,6 +3,7 @@
 namespace PortedCheese\Backups\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ZanySoft\Zip\Zip;
 
@@ -43,6 +44,7 @@ class RestoreStorageCommand extends Command
     {
         if (! Storage::disk("backups")->exists(BackupStorageCommand::FILE_NAME)) {
             $this->error("File not found");
+            Log::error("Storage archive file not found");
             return;
         }
 
@@ -55,6 +57,7 @@ class RestoreStorageCommand extends Command
 
         if (! $this->zip) {
             $this->error("Fail open archive");
+            Log::error("Fail open storage archive");
             return;
         }
 
@@ -70,6 +73,7 @@ class RestoreStorageCommand extends Command
         }
         catch (\Exception $exception) {
             $this->error("Fail extract archive. Need manually extract");
+            Log::error("Fail extract storage archive. Need manually extract");
         }
     }
 }
