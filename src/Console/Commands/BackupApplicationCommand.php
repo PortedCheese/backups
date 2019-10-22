@@ -15,7 +15,7 @@ class BackupApplicationCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'backup:app {period=daily}';
+    protected $signature = 'backup:app {period=daily} {--folder=}';
 
     /**
      * The console command description.
@@ -96,6 +96,24 @@ class BackupApplicationCommand extends Command
                 Storage::disk("backups")->delete("{$folder}/{$fileName}");
             }
             Storage::disk("backups")->move($fileName, "{$folder}/{$fileName}");
+
+            // Отправить в облако.
+            if (
+                ! empty(config("backups.keyId")) &&
+                ! empty(config("backups.keySecret")) &&
+                ! empty(config("backups.bucket")) &&
+                ! empty(config("backups.folder"))
+            ) {
+                $s3Folder = $this->option("folder");
+                if (empty($s3Folder)) {
+                    $s3Folder = config("backups.folder");
+                }
+                $this->callSilent("backup:push", [
+                    "period" => $period,
+                    "--from-current" => true,
+                    "--folder" => $s3Folder,
+                ]);
+            }
 
             $this->info("Backup {$period} create successfully");
         }

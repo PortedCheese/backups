@@ -14,7 +14,7 @@ class RestoreApplicationCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'restore:app {period=daily} {--from-current}';
+    protected $signature = 'restore:app {period=daily} {--from-current} {--folder=}';
 
     /**
      * The console command description.
@@ -52,6 +52,24 @@ class RestoreApplicationCommand extends Command
             $folder = BackupApplicationCommand::FOLDER;
             if (Storage::disk("backups")->exists("{$folder}/{$fileName}")) {
                 Storage::disk("backups")->copy("{$folder}/{$fileName}", $fileName);
+            }
+        }
+        else {
+            // Взять из облака.
+            if (
+                ! empty(config("backups.keyId")) &&
+                ! empty(config("backups.keySecret")) &&
+                ! empty(config("backups.bucket")) &&
+                ! empty(config("backups.folder"))
+            ) {
+                $s3Folder = $this->option("folder");
+                if (empty($s3Folder)) {
+                    $s3Folder = config("backups.folder");
+                }
+                $this->callSilent("backup:pull", [
+                    "period" => $period,
+                    "--folder" => $s3Folder,
+                ]);
             }
         }
 

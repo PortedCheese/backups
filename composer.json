@@ -11,8 +11,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "portedcheese/base-settings": "^v1.3",
-        "zanysoft/laravel-zip": "^1.0"
+        "zanysoft/laravel-zip": "^1.0",
+        "aws/aws-sdk-php": "^3.112"
     },
     "autoload": {
         "psr-4": {
