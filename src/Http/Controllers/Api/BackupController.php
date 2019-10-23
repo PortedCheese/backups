@@ -51,4 +51,24 @@ class BackupController extends Controller
         return response()
             ->json("Added to queue");
     }
+
+    /**
+     * Восстановить бэкап.
+     * @param Request $request
+     * @param string $period
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function restore(Request $request, string $period)
+    {
+        $data = [
+            'period' => $period,
+        ];
+        if ($folder = $request->get("folder", false)) {
+            $data["--folder"] = $folder;
+        }
+        Artisan::queue("restore:app", $data);
+
+        return response()
+            ->json("Added to queue");
+    }
 }

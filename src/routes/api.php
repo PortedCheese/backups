@@ -11,4 +11,6 @@ Route::group([
     Route::get("/", "BackupController@index");
 
     Route::post("/{period}", "BackupController@make");
+
+    Route::put("/{period}", "BackupController@restore");
 });
