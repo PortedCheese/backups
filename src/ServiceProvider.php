@@ -31,10 +31,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             PushApplicationCommand::class,
             PullApplicationCommand::class,
         ]);
+
+        // Подключение роутов.
+        $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
+
         // Экспорт конфигурации.
         $this->publishes([
             __DIR__ . '/config/backups.php' => config_path('backups.php'),
         ], 'config');
+
         // Добавить конфигурацию для файловой системы.
         app()->config['filesystems.disks.backups'] = [
             'driver' => 'local',
@@ -47,6 +52,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             'region' => config("backups.region"),
             'bucket' => config("backups.bucket"),
         ];
+
         // Yandex cloud storage.
         Storage::extend("yaS3Backups", function ($app, $config) {
             $configS3 = [

@@ -3,6 +3,7 @@
 namespace PortedCheese\Backups\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -77,6 +78,7 @@ class BackupDataBaseCommand extends Command
         catch (ProcessFailedException $exception) {
             $this->error("The backup process has been failed");
             $this->info($exception->getMessage());
+            Log::error($exception->getMessage());
         }
     }
 }
