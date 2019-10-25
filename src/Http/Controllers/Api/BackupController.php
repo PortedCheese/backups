@@ -22,9 +22,12 @@ class BackupController extends Controller
         $folder = $request->get("folder", config("backups.folder"));
         foreach (Storage::disk("yandex")->files($folder) as $fileName) {
             $ts = Storage::disk("yandex")->lastModified($fileName);
+            $carbon = Carbon::createFromTimestamp($ts);
+            $carbon->timezone = "Europe/Moscow";
             $files[] = [
                 "name" => $fileName,
-                "time" => Carbon::createFromTimestamp($ts)->format("d.m.Y H:i:s"),
+                "time" => $carbon->format("d.m.Y H:i:s"),
+                "download" => route("admin.backups.download", ['file' => $fileName]),
             ];
         }
         return response()
@@ -70,5 +73,27 @@ class BackupController extends Controller
 
         return response()
             ->json("Added to queue");
+    }
+
+    /**
+     * Скачать файл.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    public function download(Request $request)
+    {
+        if (
+            ! empty(config("backups.keyId")) &&
+            ! empty(config("backups.keySecret")) &&
+            ! empty(config("backups.bucket")) &&
+            ! empty(config("backups.folder"))
+        ) {
+            $file = $request->get("file");
+            if (Storage::disk("yandex")->exists($file)) {
+                return Storage::disk("yandex")->download($file);
+            }
+        }
+        abort(404);
     }
 }

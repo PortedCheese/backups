@@ -34,6 +34,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
         // Подключение роутов.
         $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
+        $this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
 
         // Экспорт конфигурации.
         $this->publishes([

@@ -46,16 +46,16 @@ class BackupApplicationCommand extends Command
      */
     public function handle()
     {
-        // Backup database.
-        $this->callSilent("backup:db");
-        if (! Storage::disk("backups")->exists(BackupDataBaseCommand::FILE_NAME)) {
-            $this->error("Backup database failed");
-            return;
-        }
         // Backup storage.
         $this->callSilent("backup:storage");
         if (! Storage::disk("backups")->exists(BackupStorageCommand::FILE_NAME)) {
             $this->error("Backup storage failed");
+            return;
+        }
+        // Backup database.
+        $this->callSilent("backup:db");
+        if (! Storage::disk("backups")->exists(BackupDataBaseCommand::FILE_NAME)) {
+            $this->error("Backup database failed");
             return;
         }
         // Make archive.
