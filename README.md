@@ -8,7 +8,7 @@ Yandex можно использовать и для хранения файло
 
 ## Install
 
-`php artisan vendor:publish --provider="PortedCheese\Backups\ServiceProvider" --tag=config`
+    php artisan vendor:publish --provider="PortedCheese\Backups\ServiceProvider" --tag=config
 
     YANDEX_CLOUD_ID = Id ключа
     YANDEX_CLOUD_SECRET = Secret ключа
