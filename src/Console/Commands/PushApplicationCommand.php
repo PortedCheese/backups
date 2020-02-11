@@ -53,7 +53,12 @@ class PushApplicationCommand extends Command
             $this->option("from-current") &&
             Storage::disk("backups")->exists($currentPath)
         ) {
-            Storage::disk("backups")->copy($currentPath, $fileName);
+            try {
+                Storage::disk("backups")->copy($currentPath, $fileName);
+            }
+            catch (\Exception $exception) {
+                $this->error("File already exist");
+            }
         }
         // Если файла нет, то ошибка.
         if (! Storage::disk("backups")->exists($fileName)) {
