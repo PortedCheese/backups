@@ -11,10 +11,10 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "zanysoft/laravel-zip": "^1.0",
+        "zanysoft/laravel-zip": "^2.0",
         "aws/aws-sdk-php": "^3.112",
-        "league/flysystem-aws-s3-v3": "^1.0",
-        "portedcheese/base-settings": "^v3.0"
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "portedcheese/base-settings": "^4.0"
     },
     "autoload": {
         "psr-4": {
