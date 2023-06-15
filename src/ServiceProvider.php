@@ -4,7 +4,7 @@ namespace PortedCheese\Backups;
 
 use Aws\Sdk;
 use Illuminate\Support\Facades\Storage;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use League\Flysystem\AwsS3v3\AwsS3V3Adapter;
 use League\Flysystem\Filesystem;
 use PortedCheese\Backups\Console\Commands\BackupApplicationCommand;
 use PortedCheese\Backups\Console\Commands\BackupDataBaseCommand;
@@ -73,7 +73,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $sdk = new Sdk($configS3);
             $s3 = $sdk->createS3();
 
-            return new Filesystem(new AwsS3Adapter($s3, $config['bucket']));
+            return new Filesystem(new AwsS3V3Adapter($s3, $config['bucket']));
         });
 	}
 
