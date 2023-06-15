@@ -4,7 +4,7 @@ namespace PortedCheese\Backups\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
-use ZanySoft\Zip\Zip;
+use ZanySoft\Zip\Facades\Zip;
 
 class BackupStorageCommand extends Command
 {
