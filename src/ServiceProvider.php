@@ -73,7 +73,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
             $sdk = new Sdk($configS3);
             $s3 = $sdk->createS3();
 
-            return new AwsS3V3Adapter($s3, $config['bucket']);
+            return new Filesystem(new AwsS3V3Adapter($s3, $config['bucket']));
         });
 	}
 
