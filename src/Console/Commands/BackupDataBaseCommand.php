@@ -62,13 +62,14 @@ class BackupDataBaseCommand extends Command
         }
         // Make command.
         $process = Process::fromShellCommandline(sprintf(
-            "mysqldump -u%s -p%s --default-character-set=utf8 --result-file=%s %s --ignore-table=%s --ignore-table=%s",
+            "mysqldump -u%s -p%s --default-character-set=utf8 --result-file=%s %s --ignore-table=%s --ignore-table=%s --ignore-table=%s",
             $this->username,
             $password,
             backup_path($file),
             $db,
             "$db.failed_jobs",
-            "$db.jobs"
+            "$db.jobs",
+            "$db.image_filters",
         ));
 
         try {

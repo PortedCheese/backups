@@ -3,6 +3,7 @@
 namespace PortedCheese\Backups\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use ZanySoft\Zip\Facades\Zip;
 
@@ -61,7 +62,12 @@ class BackupStorageCommand extends Command
             return;
         }
         try {
-            $this->zip->add(backup_storage_path(), true);
+            $handle = opendir(backup_storage_path());
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry !== "filters")
+                $this->zip->add(backup_storage_path($entry));
+            }
+            closedir($handle);
             $this->zip->close();
 
             $this->info("Archive generated successfully");
