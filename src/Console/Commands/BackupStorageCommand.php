@@ -64,7 +64,6 @@ class BackupStorageCommand extends Command
         try {
             $handle = opendir(backup_storage_path());
             while (false !== ($entry = readdir($handle))) {
-                Log::info($entry);
                 if ($entry !== "filters" && $entry !== "." && $entry !== "..")
                 $this->zip->add(backup_storage_path($entry));
             }
